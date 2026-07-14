@@ -1,45 +1,47 @@
-##!/bin/bash
+#!/bin/bash
 
 clear
-echo "=================================="
+
+echo "======================================"
 echo "        EVM PANEL INSTALLER"
-echo "         By SKYDO YT"
-echo "=================================="
+echo "           By SKYDO YT"
+echo "======================================"
+echo ""
+echo "1) Install EVM Panel"
+echo "2) LXC/LXD Installer"
+echo ""
+read -p "Select an option [1-2]: " option
 
-apt update -y && apt upgrade -y
+case $option in
+1)
+    echo "Installing EVM Panel..."
 
-echo "[+] Installing dependencies..."
-apt install -y git unzip curl python3 python3-pip python3-venv npm
+    apt update -y && apt upgrade -y
+    apt install -y git unzip curl python3 python3-pip npm
 
-echo "[+] Cloning EVM PANEL..."
-git clone https://github.com/SKYDO234/EVM-PANEL.git
+    git clone https://github.com/SKYDO234/EVM-PANEL.git
 
-cd EVM-PANEL || exit
+    cd EVM-PANEL || exit
 
-echo "[+] Extracting panel..."
-mkdir -p panel
-unzip -o EVM.zip -d panel
+    mkdir -p panel
+    unzip -o EVM.zip -d panel
 
-cd panel/EVM/hvm || exit
+    cd panel/EVM/hvm || exit
 
-echo "[+] Installing Node.js packages..."
-npm install
+    npm install
 
-echo "[+] Installing Python packages..."
-pip3 install -r requirements.txt
-python3 -m pip install --break-system-packages -r requirements.txt
+    pip3 install -r requirements.txt
+    python3 -m pip install --break-system-packages -r requirements.txt
 
-echo
-echo "=================================="
-echo "Starting EVM PANEL..."
-echo "Press CTRL+C to stop the panel."
-echo "=================================="
+    python3 hvm.py
+    ;;
+2)
+    echo "Launching LXC/LXD Installer..."
 
-python3 hvm.py
-
-echo
-echo "=================================="
-echo "Installing LXD..."
-echo "=================================="
-
-bash <(curl -fsSL "https://raw.githubusercontent.com/SKYDO234/EVM-PANEL/refs/heads/main/lxd%20installer.txt")
+    bash <(curl -fsSL "https://raw.githubusercontent.com/SKYDO234/EVM-PANEL/refs/heads/main/lxd%20installer.txt")
+    ;;
+*)
+    echo "Invalid option!"
+    exit 1
+    ;;
+esac
