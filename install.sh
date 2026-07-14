@@ -1,49 +1,45 @@
-#!/bin/bash
+##!/bin/bash
 
 clear
-echo "===================================="
-echo "       EVM PANEL INSTALLER"
-echo "          By SKYDO YT"
-echo "===================================="
+echo "=================================="
+echo "        EVM PANEL INSTALLER"
+echo "         By SKYDO YT"
+echo "=================================="
 
-# Update system
 apt update -y && apt upgrade -y
 
-# Install dependencies
-apt install -y git unzip curl python3 python3-pip npm
+echo "[+] Installing dependencies..."
+apt install -y git unzip curl python3 python3-pip python3-venv npm
 
-# Clone repository
+echo "[+] Cloning EVM PANEL..."
 git clone https://github.com/SKYDO234/EVM-PANEL.git
 
-# Extract panel
-mkdir -p panel
-unzip EVM.zip -d panel
+cd EVM-PANEL || exit
 
-# Enter directory
+echo "[+] Extracting panel..."
+mkdir -p panel
+unzip -o EVM.zip -d panel
+
 cd panel/EVM/hvm || exit
 
-# Install Node.js packages
+echo "[+] Installing Node.js packages..."
 npm install
 
-# Install Python packages
+echo "[+] Installing Python packages..."
 pip3 install -r requirements.txt
 python3 -m pip install --break-system-packages -r requirements.txt
 
-echo ""
-echo "===================================="
-echo "Starting EVM Panel..."
-echo "Press CTRL+C after the panel starts."
-echo "===================================="
-echo ""
+echo
+echo "=================================="
+echo "Starting EVM PANEL..."
+echo "Press CTRL+C to stop the panel."
+echo "=================================="
 
 python3 hvm.py
 
-echo ""
-echo "===================================="
+echo
+echo "=================================="
 echo "Installing LXD..."
-echo "===================================="
+echo "=================================="
 
 bash <(curl -fsSL "https://raw.githubusercontent.com/SKYDO234/EVM-PANEL/refs/heads/main/lxd%20installer.txt")
-
-echo ""
-echo "Installation Completed!"
