@@ -2,83 +2,69 @@
 
 clear
 
-# Colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-CYAN='\033[0;36m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
+echo "====================================="
+echo "         EVM PANEL INSTALLER"
+echo "====================================="
+echo "1) Install EVM Panel"
+echo "2) LXC Installer"
+echo "3) Cloudflare Install"
+echo "4) Multinode Installer"
+echo "0) Exit"
+echo "====================================="
+read -p "Select an option: " option
 
-while true; do
-    clear
-    echo -e "${CYAN}"
-    echo "========================================"
-    echo "            EVM PANEL INSTALLER         "
-    echo "========================================"
-    echo -e "${NC}"
-    echo "1) Install EVM Panel"
-    echo "2) LXC Installer"
-    echo "3) Cloudflare Install"
-    echo "4) Multinode Install"
-    echo "0) Exit"
-    echo
-    read -p "Select an option: " OPTION
+case $option in
 
-    case $OPTION in
-        1)
-            clear
-            echo -e "${GREEN}Installing EVM Panel...${NC}"
+1)
+    git clone https://github.com/SKYDO234/EVM-PANEL.git
+    cd EVM-PANEL || exit
 
-            apt update -y
-            apt upgrade -y
+    mkdir -p panel
+    unzip EVM.zip -d panel
 
-            apt install -y git unzip curl python3 python3-pip python3-venv npm
+    cd panel || exit
+    cd EVM || exit
+    cd hvm || exit
 
-            if [ ! -d "EVM-PANEL" ]; then
-                git clone https://github.com/SKYDO234/EVM-PANEL.git
-            fi
+    apt update && apt upgrade -y
 
-            cd EVM-PANEL || exit
+    apt install -y python3
+    apt install -y python3-pip
+    apt install -y pip
 
-            mkdir -p panel
-            unzip -o EVM.zip -d panel
+    # Install Node.js & npm
+    apt install -y npm
 
-            cd panel/EVM/hvm || exit
+    npm install
 
-            npm install
+    pip3 install -r requirements.txt
+    python3 -m pip install --break-system-packages -r requirements.txt
 
-            pip3 install -r requirements.txt
-            python3 -m pip install --break-system-packages -r requirements.txt
+    python3 hvm.py
+    ;;
 
-            python3 hvm.py
+2)
+    bash <(curl -fsSL "https://raw.githubusercontent.com/SKYDO234/EVM-PANEL/refs/heads/main/lxd%20installer.txt")
+    ;;
 
-            read -p "Press Enter to return to menu..."
-            ;;
-        2)
-            clear
-            echo -e "${GREEN}Starting LXC Installer...${NC}"
-            bash <(curl -fsSL "https://raw.githubusercontent.com/SKYDO234/EVM-PANEL/refs/heads/main/lxd%20installer.txt")
-            read -p "Press Enter to return to menu..."
-            ;;
-        3)
-            clear
-            echo -e "${GREEN}Installing Cloudflare Tunnel...${NC}"
-            bash <(curl -fsSL https://raw.githubusercontent.com/SKYDO234/EVM-PANEL/main/cloudflare.sh)
-            read -p "Press Enter to return to menu..."
-            ;;
-        4)
-            clear
-            echo -e "${GREEN}Installing Multinode...${NC}"
-            sudo python3 node.py --install
-            read -p "Press Enter to return to menu..."
-            ;;
-        0)
-            echo "Goodbye!"
-            exit 0
-            ;;
-        *)
-            echo -e "${RED}Invalid option!${NC}"
-            sleep 2
-            ;;
-    esac
-done
+3)
+    bash <(curl -fsSL https://raw.githubusercontent.com/SKYDO234/EVM-PANEL/main/cloudflare.sh)
+    ;;
+
+4)
+    cd EVM-PANEL || exit
+    cd panel || exit
+    cd EVM || exit
+
+    python3 node.py --install
+    ;;
+
+0)
+    echo "Exiting..."
+    exit 0
+    ;;
+
+*)
+    echo "Invalid option!"
+    ;;
+esac
