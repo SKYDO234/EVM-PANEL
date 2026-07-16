@@ -2,68 +2,103 @@
 
 clear
 
-echo "====================================="
-echo "         EVM PANEL INSTALLER"
-echo "====================================="
-echo "1) Install EVM Panel"
-echo "2) LXC Installer"
-echo "3) Cloudflare Install"
-echo "4) Multinode Installer"
-echo "0) Exit"
-echo "====================================="
-read -p "Select an option: " option
+while true; do
+    clear
+    echo "===================================="
+    echo "         EVM PANEL INSTALLER"
+    echo "===================================="
+    echo "1) EVM PANEL INSTALL"
+    echo "2) LXC INSTALLER"
+    echo "3) CLOUDFLARE INSTALL"
+    echo "4) MULTINODE INSTALL"
+    echo "0) EXIT"
+    echo "===================================="
+    read -p "Select an option: " choice
 
-case $option in
+    case $choice in
+        1)
+            clear
 
-1)
-    git clone https://github.com/SKYDO234/EVM-PANEL.git
-    cd EVM-PANEL || exit
+            git clone https://github.com/SKYDO234/EVM-PANEL.git
 
-    mkdir -p panel
-    unzip EVM.zip -d panel
+            cd EVM-PANEL || exit
 
-    cd panel || exit
-    cd EVM || exit
-    cd hvm || exit
+            mkdir -p panel
+            unzip EVM.zip -d panel
 
-    apt update && apt upgrade -y
+            cd panel
+            cd EVM
+            cd hvm
 
-    apt install -y python3
-    apt install -y python3-pip
-    apt install -y pip
+            apt update -y && apt upgrade -y
 
-    # Install Node.js & npm
-    apt install -y npm
+            apt install -y python3
+            apt install -y python3-pip
+            apt install -y pip
 
-    npm install
+            # Install Node.js & npm
+            apt install -y nodejs npm
 
-    pip3 install -r requirements.txt
-    python3 -m pip install --break-system-packages -r requirements.txt
+            npm install
 
-    python3 hvm.py
-    ;;
+            pip3 install -r requirements.txt
+            python3 -m pip install --break-system-packages -r requirements.txt
 
-2)
-    bash <(curl -fsSL "https://raw.githubusercontent.com/SKYDO234/EVM-PANEL/refs/heads/main/lxd%20installer.txt")
-    ;;
+            python3 hvm.py
 
-3)
-    bash <(curl -fsSL https://raw.githubusercontent.com/SKYDO234/EVM-PANEL/main/cloudflare.sh)
-    ;;
+            echo
+            read -p "Press Enter to return to the menu..."
+            cd ../../../../
+            ;;
 
-4)
-    cd EVM-PANEL || exit
-    cd panel || exit
-    cd EVM || exit
+        2)
+            clear
 
-    python3 node.py --install
-    ;;
+            bash <(curl -fsSL "https://raw.githubusercontent.com/SKYDO234/EVM-PANEL/refs/heads/main/lxd%20installer.txt")
 
-0)
-    echo "Exiting..."
-    exit 0
-    ;;
+            echo
+            read -p "Press Enter to return to the menu..."
+            ;;
 
+        3)
+            clear
+
+            bash <(curl -fsSL https://raw.githubusercontent.com/SKYDO234/EVM-PANEL/main/cloudflare.sh)
+
+            echo
+            read -p "Press Enter to return to the menu..."
+            ;;
+
+        4)
+            clear
+
+            cd EVM-PANEL || {
+                echo "EVM-PANEL folder not found!"
+                read -p "Press Enter to return..."
+                continue
+            }
+
+            cd panel
+            cd EVM
+            cd hvm
+
+            python3 node.py --install
+
+            echo
+            read -p "Press Enter to return to the menu..."
+            cd ../../../../
+            ;;
+
+        0)
+            exit 0
+            ;;
+
+        *)
+            echo "Invalid option!"
+            sleep 2
+            ;;
+    esac
+done
 *)
     echo "Invalid option!"
     ;;
